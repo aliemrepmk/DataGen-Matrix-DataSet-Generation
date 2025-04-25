@@ -13,3 +13,15 @@ document.addEventListener("DOMContentLoaded", function () {
         blockSizeGroup.style.display = (value === "Wavelet Transformation") ? 'block' : 'none';
     });
 });
+document.addEventListener("DOMContentLoaded", () => {
+    const btn     = document.getElementById("toggleHeatBtn");
+    const section = document.getElementById("heatmapSection");
+
+    if (!btn || !section) return;            // no heat-map yet
+
+    btn.addEventListener("click", () => {
+        const shown = section.style.display !== "none";
+        section.style.display = shown ? "none" : "block";
+        btn.textContent = shown ? "Show Heat-map" : "Hide Heat-map";
+    });
+});

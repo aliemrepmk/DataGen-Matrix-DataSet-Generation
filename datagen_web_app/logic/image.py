@@ -8,41 +8,33 @@ from PIL import Image
 from scipy.io import mmwrite
 import os
 import tempfile
+  
 
 def create_heatmap(matrix: sp.spmatrix, output_file: str) -> None:
-    """Create a heatmap from the given matrix and save it as an image file."""
-    # Convert to dense if necessary
+    """Create a heat-map PNG from a sparse or dense matrix."""
+    # dense copy
     if hasattr(matrix, "toarray"):
         matrix = matrix.toarray()
-    matrix = np.array(matrix)
-    
-    # Get the matrix dimensions
+    matrix = np.asarray(matrix)
+
     rows, cols = matrix.shape
-    
-    # Create a boolean mask for nonzero values
     mask = matrix != 0
-    
-    # Determine normalization limits for nonzero values
+
     if np.any(mask):
         vmin = matrix[mask].min()
         vmax = matrix[mask].max()
     else:
         vmin, vmax = 0, 1
-    
-    # Normalize the matrix values and choose a colormap
+
     norm = mcolors.Normalize(vmin=vmin, vmax=vmax)
     cmap = plt.cm.viridis
-    
-    # Map the matrix to RGBA colors
+
     rgba = cmap(norm(matrix))
-    
-    # Set all zero values to white
-    rgba[~mask] = [1, 1, 1, 1]
-    
-    # Convert to RGB and save
+    rgba[~mask] = [1, 1, 1, 1]           # white for zeros
+
     rgb = (rgba[:, :, :3] * 255).astype(np.uint8)
     img = Image.fromarray(rgb)
-    img.save(output_file)
+    img.save(output_file, format="PNG")
 
 def convert_grayscale(input_image_path: str, output_image_path: str) -> None:
     """Convert an image to grayscale."""
