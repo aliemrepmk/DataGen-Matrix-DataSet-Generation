@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Matrix Generator</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container mt-5">
+    <h3 class="mb-4">Matrix Generation Tool</h3>
+    <form action="/generate" method="POST" enctype="multipart/form-data">
+        <!-- Upload Matrix File -->
+        <div class="form-group">
+            <label for="matrix_upload">Upload .mtx Matrix File</label>
+            {% if uploaded_filename %}
+    <div class="alert alert-info">
+        Using previously uploaded file: <strong>{{ uploaded_filename }}</strong><br>
+        You can upload a new file to replace it.
+    </div>
+{% endif %}
+<input type="file" name="matrix_upload" class="form-control-file" id="matrix_upload" accept=".mtx">
+        </div>
+
+        <!-- Algorithm Selection -->
+        <div class="form-group">
+            <label for="generationAlgorithm">Select Generation Algorithm</label>
+            <select class="form-control" name="algorithm" id="generationAlgorithm">
+                {% set alg = selected_algorithm or '' %}
+                <option {% if alg == 'Wavelet Transformation' %}selected{% endif %}>Wavelet Transformation</option>
+                <option {% if alg == 'Nearest-neighbor Interpolation' %}selected{% endif %}>Nearest-neighbor Interpolation</option>
+                <option {% if alg == 'Bi-linear Interpolation' %}selected{% endif %}>Bi-linear Interpolation</option>
+                <option {% if alg == 'Lanczos Resampling' %}selected{% endif %}>Lanczos Resampling</option>
+                <option {% if alg == 'Gaussian Pyramids' %}selected{% endif %}>Gaussian Pyramids</option>
+                <option {% if alg == 'Image-based Scaling' %}selected{% endif %}>Image-based Scaling</option>
+                <option {% if alg == 'Graph Coarsening & Refinement' %}selected{% endif %}>Graph Coarsening & Refinement</option>
+            </select>
+        </div>
+
+        <!-- Wavelet Type -->
+        <div class="form-group" id="waveletTypeGroup" style="display: none;">
+            <label for="waveletType">Select Wavelet Type</label>
+            <select class="form-control" name="wavelet_type" id="waveletType">
+                {% set wavelet = form_data.wavelet_type if form_data else 'db4' %}
+                {% for val in ['db1','db2','db3','db4','db5','db6','db7','db8','db9','db10',
+                               'sym2','sym3','sym4','sym5','sym6','sym7','sym8','sym9','sym10',
+                               'coif1','coif2','coif3','coif4','coif5'] %}
+                    <option {% if wavelet == val %}selected{% endif %}>{{ val }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <!-- Block Size -->
+        <div class="form-group" id="blockSizeGroup" style="display: none;">
+            <label for="blockSize">Block Size</label>
+            <input type="number" class="form-control" name="block_size" id="blockSize"
+                   placeholder="e.g. 2" min="2" step="2"
+                   value="{{ form_data.block_size if form_data and form_data.block_size else '' }}">
+            <small class="form-text text-muted">Block size must be an even number (2, 4, 6, etc.)</small>
+        </div>
+
+        <!-- Image Resampling Method -->
+        <div class="form-group" id="imageResamplingGroup" style="display: none;">
+            <label for="imageResamplingMethod">Select Image Resampling Method</label>
+            <select class="form-control" name="image_resampling_method" id="imageResamplingMethod">
+                {% set resampling = form_data.image_resampling_method if form_data else 'Image.BOX' %}
+                {% for method in ['Image.NEAREST','Image.BOX','Image.BILINEAR','Image.HAMMING','Image.BICUBIC','Image.LANCZOS'] %}
+                    <option {% if resampling == method %}selected{% endif %}>{{ method }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <!-- Kernel Size -->
+        <div class="form-group" id="kernelSizeGroup" style="display: none;">
+            <label for="kernelSize">Kernel Size</label>
+            <input type="number" class="form-control" name="kernel_size" id="kernelSize"
+                   placeholder="e.g. 3"
+                   value="{{ form_data.kernel_size if form_data and form_data.kernel_size else '' }}">
+        </div>
+
+        <!-- Row / Column Inputs -->
+        <div class="form-row">
+            <div class="form-group col">
+                <label>Rows</label>
+                <input type="number" class="form-control" name="rows" placeholder="e.g. 512" required
+                       value="{{ form_data.rows if form_data and form_data.rows else '' }}" min="1">
+            </div>
+            <div class="form-group col">
+                <label>Columns</label>
+                <input type="number" class="form-control" name="cols" placeholder="e.g. 512" required
+                       value="{{ form_data.cols if form_data and form_data.cols else '' }}" min="1">
+            </div>
+        </div>
+
+        <!-- Checkboxes -->
+        <div class="form-group form-check">
+            <input type="checkbox" class="form-check-input" name="match_nnz" id="matchNonZeroCheck"
+                   {% if form_data and 'match_nnz' in form_data %}checked{% endif %}>
+            <label class="form-check-label" for="matchNonZeroCheck">Match the number of non-zero values</label>
+        </div>
+
+        <div class="form-group form-check">
+            <input type="checkbox" class="form-check-input" name="optimize" id="optimizeCheck"
+                   {% if form_data and 'optimize' in form_data %}checked{% endif %}>
+            <label class="form-check-label" for="optimizeCheck">Optimize after generation</label>
+        </div>
+
+        <button type="submit" class="btn btn-success">Generate Matrix</button>
+    </form>
+
+    <div id="visualContainer" class="mt-4">
+        <h5 id="visualTitle">Visualization of Original and Generated Matrices</h5>
+        <img src="/visualization" class="img-fluid border" alt="Matrix Visualization"
+             onerror="document.getElementById('visualContainer').style.display='none';">
+    </div>
+    {% if heatmap_pair_path %}
+<!-- ▸ toggle button -->
+<button id="toggleHeatBtn" class="btn btn-success btn-primary btn-sm mt-4">
+    Show&nbsp;Heat-map
+</button>
+
+<!-- ▸ heat-map container (starts hidden) -->
+<div id="heatmapSection" class="mt-3" style="display:none;">
+    <h5 class="mb-2">Heat-maps (Original&nbsp;vs&nbsp;Generated)</h5>
+    <img src="{{ url_for('static', filename='heatmap_pair.png') }}"
+         class="img-fluid border" alt="Combined heat-map">
+</div>
+{% endif %}   
+</div>
+
+<script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
