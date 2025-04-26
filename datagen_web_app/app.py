@@ -9,7 +9,7 @@ from logic.wavelet import scale_sparse_matrix_wavelet
 from logic.nearest import scale_sparse_matrix_nearest
 from logic.bilinear import scale_sparse_matrix_bilinear
 from logic.lanczos import scale_sparse_matrix_lanczos
-from logic.gaussian import scale_sparse_matrix_gaussian
+from logic.gaussian import gaussian_pyramid_sparse
 from logic.image   import scale_sparse_matrix_image, create_heatmap
 from logic.visualize_matrix import visualize_matrices , visualize_heatmaps
 from PIL import Image
@@ -108,7 +108,7 @@ def generate():
         elif algorithm == "Lanczos Resampling":
             result = scale_sparse_matrix_lanczos(matrix, rows, output_path, match_nnz, kernel_size)
         elif algorithm == "Gaussian Pyramids":
-            result = scale_sparse_matrix_gaussian(matrix, rows, output_path, match_nnz)
+            result = gaussian_pyramid_sparse(matrix)
         elif algorithm == "Image-based Scaling":
             resize_method = getattr(Image, image_resampling.split('.')[-1])
             result = scale_sparse_matrix_image(matrix, rows, output_path, resize_method)
