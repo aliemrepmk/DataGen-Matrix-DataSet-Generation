@@ -80,7 +80,7 @@ def generate():
 
     kernel_size      = int(form_data.get('kernel_size', 3) or 3)
     image_resampling = form_data.get('image_resampling_method', 'Image.BOX')
-    wavelet_type     = form_data.get('wavelet_type', 'db4')
+    wavelet_level    = int(form_data.get('wavelet_type', 2) or 2)  # Default to level 2
     block_size       = int(form_data.get('block_size', 2) or 2)
     if block_size % 2:
         block_size += 1  # ensure even
@@ -100,7 +100,7 @@ def generate():
     # 5 ─────────── run algorithm
     try:
         if algorithm == "Wavelet Transformation":
-            result = scale_sparse_matrix_wavelet(matrix, rows, cols, wavelet_type, block_size)
+            result = scale_sparse_matrix_wavelet(matrix, rows, cols, wavelet_type='db1', level=wavelet_level)
         elif algorithm == "Nearest-neighbor Interpolation":
             result = scale_sparse_matrix_nearest(matrix, rows, output_path, match_nnz)
         elif algorithm == "Bi-linear Interpolation":
