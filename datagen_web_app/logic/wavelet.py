@@ -19,13 +19,6 @@ def resize_exact(matrix, scale_rows, scale_cols):
         preserve_range=True
     )
 
-def perturb_details(coeff: np.ndarray) -> np.ndarray:
-    """Add random perturbation to detail coefficients."""
-    if coeff.size == 0:
-        return coeff
-    noise = np.random.normal(0, np.std(coeff) * 0.1, coeff.shape)
-    return coeff + noise
-
 def scale_sparse_matrix_wavelet(original_matrix: sp.csr_matrix, new_rows: int, new_cols: int, wavelet_type: str = 'db1', level: int = 2) -> sp.csr_matrix:
     block_size = (2 ** level)
 
@@ -72,35 +65,35 @@ def scale_sparse_matrix_wavelet(original_matrix: sp.csr_matrix, new_rows: int, n
         if level == 1:
             cA, (cH, cV, cD) = coeffs
             cA = resize_exact(cA, scale_rows, scale_cols)
-            cH = perturb_details(resize_exact(cH, scale_rows, scale_cols))
-            cV = perturb_details(resize_exact(cV, scale_rows, scale_cols))
-            cD = perturb_details(resize_exact(cD, scale_rows, scale_cols))
+            cH = resize_exact(cH, scale_rows, scale_cols)
+            cV = resize_exact(cV, scale_rows, scale_cols)
+            cD = resize_exact(cD, scale_rows, scale_cols)
             new_coeffs = [cA, (cH, cV, cD)]
 
         elif level == 2:
             cA, (cH1, cV1, cD1), (cH2, cV2, cD2) = coeffs
             cA = resize_exact(cA, scale_rows, scale_cols)
-            cH1 = perturb_details(resize_exact(cH1, scale_rows, scale_cols))
-            cV1 = perturb_details(resize_exact(cV1, scale_rows, scale_cols))
-            cD1 = perturb_details(resize_exact(cD1, scale_rows, scale_cols))
-            cH2 = perturb_details(resize_exact(cH2, scale_rows, scale_cols))
-            cV2 = perturb_details(resize_exact(cV2, scale_rows, scale_cols))
-            cD2 = perturb_details(resize_exact(cD2, scale_rows, scale_cols))
+            cH1 = resize_exact(cH1, scale_rows, scale_cols)
+            cV1 = resize_exact(cV1, scale_rows, scale_cols)
+            cD1 = resize_exact(cD1, scale_rows, scale_cols)
+            cH2 = resize_exact(cH2, scale_rows, scale_cols)
+            cV2 = resize_exact(cV2, scale_rows, scale_cols)
+            cD2 = resize_exact(cD2, scale_rows, scale_cols)
 
             new_coeffs = [cA, (cH1, cV1, cD1), (cH2, cV2, cD2)]
 
         elif level == 3:
             cA, (cH1, cV1, cD1), (cH2, cV2, cD2), (cH3, cV3, cD3) = coeffs
             cA = resize_exact(cA, scale_rows, scale_cols)
-            cH1 = perturb_details(resize_exact(cH1, scale_rows, scale_cols))
-            cV1 = perturb_details(resize_exact(cV1, scale_rows, scale_cols))
-            cD1 = perturb_details(resize_exact(cD1, scale_rows, scale_cols))
-            cH2 = perturb_details(resize_exact(cH2, scale_rows, scale_cols))
-            cV2 = perturb_details(resize_exact(cV2, scale_rows, scale_cols))
-            cD2 = perturb_details(resize_exact(cD2, scale_rows, scale_cols))
-            cH3 = perturb_details(resize_exact(cH3, scale_rows, scale_cols))
-            cV3 = perturb_details(resize_exact(cV3, scale_rows, scale_cols))
-            cD3 = perturb_details(resize_exact(cD3, scale_rows, scale_cols))
+            cH1 = resize_exact(cH1, scale_rows, scale_cols)
+            cV1 = resize_exact(cV1, scale_rows, scale_cols)
+            cD1 = resize_exact(cD1, scale_rows, scale_cols)
+            cH2 = resize_exact(cH2, scale_rows, scale_cols)
+            cV2 = resize_exact(cV2, scale_rows, scale_cols)
+            cD2 = resize_exact(cD2, scale_rows, scale_cols)
+            cH3 = resize_exact(cH3, scale_rows, scale_cols)
+            cV3 = resize_exact(cV3, scale_rows, scale_cols)
+            cD3 = resize_exact(cD3, scale_rows, scale_cols)
 
             new_coeffs = [cA, (cH1, cV1, cD1), (cH2, cV2, cD2), (cH3, cV3, cD3)]
         else:

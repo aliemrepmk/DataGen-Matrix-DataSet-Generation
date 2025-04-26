@@ -1,2 +1,14 @@
 .DS_Store
-.mtx
+*.mtx
+__pycache__/
+optimized-matrices/
+original-matrices/
+generated-matrices/
+uploaded-matrices/
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.bmp
+*.tiff
+*.ico
