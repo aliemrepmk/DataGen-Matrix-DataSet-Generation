@@ -100,7 +100,13 @@ def generate():
     # 5 ─────────── run algorithm
     try:
         if algorithm == "Wavelet Transformation":
-            result = scale_sparse_matrix_wavelet(matrix, rows, cols, wavelet_type='db1', level=wavelet_level)
+            # Check if we're reducing dimensions
+            orig_rows, orig_cols = matrix.shape
+            if rows < orig_rows or cols < orig_cols:
+                # Use Gaussian method for dimension reduction
+                result = scale_sparse_matrix_lanczos(matrix, rows, output_path, match_nnz, kernel_size)
+            else:
+                result = scale_sparse_matrix_wavelet(matrix, rows, cols, wavelet_type='db1', level=wavelet_level)
         elif algorithm == "Nearest-neighbor Interpolation":
             result = scale_sparse_matrix_nearest(matrix, rows, output_path, match_nnz)
         elif algorithm == "Bi-linear Interpolation":
