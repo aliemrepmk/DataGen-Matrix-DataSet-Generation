@@ -26,8 +26,8 @@
             <label for="generationAlgorithm">Select Generation Algorithm</label>
             <select class="form-control" name="algorithm" id="generationAlgorithm">
                 {% set alg = selected_algorithm or '' %}
-                <option {% if alg == 'Wavelet Transformation' %}selected{% endif %}>Wavelet Transformation</option>
                 <option {% if alg == 'Nearest-neighbor Interpolation' %}selected{% endif %}>Nearest-neighbor Interpolation</option>
+                <option {% if alg == 'Wavelet Transformation' %}selected{% endif %}>Wavelet Transformation</option>
                 <option {% if alg == 'Bi-linear Interpolation' %}selected{% endif %}>Bi-linear Interpolation</option>
                 <option {% if alg == 'Lanczos Resampling' %}selected{% endif %}>Lanczos Resampling</option>
                 <option {% if alg == 'Gaussian Pyramids' %}selected{% endif %}>Gaussian Pyramids</option>
@@ -38,24 +38,13 @@
 
         <!-- Wavelet Type -->
         <div class="form-group" id="waveletTypeGroup" style="display: none;">
-            <label for="waveletType">Select Wavelet Type</label>
+            <label for="waveletType">Select Wavelet Level</label>
             <select class="form-control" name="wavelet_type" id="waveletType">
-                {% set wavelet = form_data.wavelet_type if form_data else 'db4' %}
-                {% for val in ['db1','db2','db3','db4','db5','db6','db7','db8','db9','db10',
-                               'sym2','sym3','sym4','sym5','sym6','sym7','sym8','sym9','sym10',
-                               'coif1','coif2','coif3','coif4','coif5'] %}
-                    <option {% if wavelet == val %}selected{% endif %}>{{ val }}</option>
-                {% endfor %}
+                {% set wavelet = form_data.wavelet_type if form_data else 'db1' %}
+                <option value="1" {% if wavelet == '1' %}selected{% endif %}>Level 1</option>
+                <option value="2" {% if wavelet == '2' %}selected{% endif %}>Level 2</option>
+                <option value="3" {% if wavelet == '3' %}selected{% endif %}>Level 3</option>
             </select>
-        </div>
-
-        <!-- Block Size -->
-        <div class="form-group" id="blockSizeGroup" style="display: none;">
-            <label for="blockSize">Block Size</label>
-            <input type="number" class="form-control" name="block_size" id="blockSize"
-                   placeholder="e.g. 2" min="2" step="2"
-                   value="{{ form_data.block_size if form_data and form_data.block_size else '' }}">
-            <small class="form-text text-muted">Block size must be an even number (2, 4, 6, etc.)</small>
         </div>
 
         <!-- Image Resampling Method -->
