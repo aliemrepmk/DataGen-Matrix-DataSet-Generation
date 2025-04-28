@@ -15,6 +15,7 @@ from logic.visualize_matrix import visualize_matrices , visualize_heatmaps
 from PIL import Image
 from scipy.sparse import csr_matrix
 from logic.graph import scale_sparse_matrix_graph
+from logic.fourier import scale_sparse_matrix_fourier
 
 app = Flask(__name__)
 
@@ -120,6 +121,8 @@ def generate():
             result = scale_sparse_matrix_image(matrix, rows, output_path, resize_method)
         elif algorithm == "Graph Coarsening & Refinement":
             result = scale_sparse_matrix_graph(matrix, rows, output_path, match_nnz)
+        elif algorithm == "Fourier Transform":
+            result = scale_sparse_matrix_fourier(matrix, rows, cols, output_path)
         else:
             return "Unsupported algorithm selected.", 400
     except Exception as e:
