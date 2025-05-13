@@ -1,0 +1,10 @@
+.info-text {
+    font-weight: bold;
+    text-align: center;
+    margin-top: 3rem;
+}
+
+.info-text #features {
+    margin-top: 0;
+    font-weight: normal;
+}
