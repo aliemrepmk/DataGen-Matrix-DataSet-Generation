@@ -10,7 +10,7 @@
 <body>
     <div class="container mt-5">
         <div class="text-center mb-5">
-            <h1 class="display-4">Welcome to DataGen</h1>
+            <h1 class="display-4">Welcome to MatGen</h1>
             <h3>Matrix Dataset Generation</h3>
             <p class="lead">Choose an operation to begin</p>
         </div>
@@ -43,37 +43,32 @@
                             <div class="card-body text-center">
                                 <h5 class="card-title">Simulation</h5>
                                 <p class="card-text">Run simulations with generated matrices</p>
-                                <button class="btn btn-primary" disabled>Coming Soon</button>
+                                <a href="{{ url_for('simulation') }}" class="btn btn-primary">Start</a>
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="col-md-6">
                         <div class="card h-100">
                             <div class="card-body text-center">
                                 <h5 class="card-title">Neural Network</h5>
                                 <p class="card-text">Train neural networks on generated datasets</p>
-                                <button class="btn btn-primary" disabled>Coming Soon</button>
+                                <a href="{{ url_for('neural_network') }}" class="btn btn-primary">Start</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-12 d-flex justify-content-center">
+                        <div class="card h-100" style="min-width: 350px; max-width: 500px; width: 100%;">
+                            <div class="card-body text-center">
+                                <h5 class="card-title">About</h5>
+                                <p class="card-text">Learn more about DataGen and its features</p>
+                                <a href="{{ url_for('about') }}" class="btn btn-primary">Start</a>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-
-        <div class="info-text">
-            <p>
-                DataGen is a cutting-edge project designed to generate and manipulate matrix datasets efficiently 
-                using advanced algorithms and artificial intelligence techniques.
-
-                <br>
-                <div id="features">
-                    Features
-                    <br>- Dynamic matrix generation with customizable dimensions and density.
-                    <br>- Matrix manipulation tools for expansion while preserving structural integrity.
-                    <br>- Interactive GUI for intuitive matrix creation and visualization.
-                </div>
-            </p>
         </div>
     </div>
 </body>

@@ -2,7 +2,7 @@ import numpy as np
 import scipy.sparse as sp
 from scipy.fft import fft2, ifft2, fftshift, ifftshift
 
-def resize_sparse_fft(sparse_mat: sp.spmatrix, new_shape: tuple[int, int], eps: float = 1e-3) -> sp.csr_matrix:
+def resize_sparse_fft(sparse_mat: sp.spmatrix, new_shape: tuple[int, int], eps: float = 1e-2) -> sp.csr_matrix:
     """
     Resize a 2D sparse matrix via Fourier zero-pad/crop **with correct fftshift**.
     Converts to dense only for FFT, then returns sparse CSR.

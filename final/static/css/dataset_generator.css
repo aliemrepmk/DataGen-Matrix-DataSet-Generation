@@ -146,7 +146,6 @@ body {
         padding: 1rem;
     }
 }
-
 .result-card {
     margin-bottom: 1rem;
 }
@@ -157,4 +156,32 @@ body {
 
 .list-group-item:hover {
     background-color: #f8f9fa;
+}
+tbody tr td:nth-child(2),
+tbody tr td:nth-child(3) {
+  text-align-last: right;
+}
+.col-md-6 img{
+    aspect-ratio: 1;
+    width: 40vw;
+}
+#results{
+    width: 60vw;
+    justify-self: center;
+}
+#visualizationContainer{
+    justify-self: center;
+    width: 60vw;
+}
+#graphSection{
+    justify-self: center;
+    width: 60vw;
+}
+#featuresSection{
+    justify-self: center;
+    width: 60vw;
+}
+#heatmapSection{
+    justify-self: center;
+    width: 60vw;
 }

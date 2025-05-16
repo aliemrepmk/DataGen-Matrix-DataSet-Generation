@@ -18,8 +18,12 @@
             <div class="col-md-8">
                 <form id="matrixForm">
                     <div class="form-group mb-3">
-                        <label for="matrix_file" class="form-label">Upload .mtx Matrix File</label>
-                        <input type="file" class="form-control" id="matrix_file" name="matrix_file" accept=".mtx" required>
+                        <label for="matrix_folder">Select Folder Containing .mtx Files</label>
+                        <input type="file" class="form-control" id="matrix_folder" name="matrix_folder" webkitdirectory directory multiple required>
+                    </div>
+                    <div class="form-group mb-3" id="matrixFileDropdownGroup" style="display: none;">
+                        <label for="matrix_file_select">Choose a Matrix File</label>
+                        <select class="form-control" id="matrix_file_select" name="matrix_file_select" required></select>
                     </div>
                     
                     <div class="form-group mb-3">
@@ -52,6 +56,10 @@
         </div>
 
         <div id="results" class="mt-4"></div>
+
+        <div class="text-center mt-4">
+            <a href="{{ url_for('welcome') }}" class="btn btn-secondary">Back to Home</a>
+        </div>
     </div>
 
     <!-- Message Modal -->

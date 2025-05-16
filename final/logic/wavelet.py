@@ -9,15 +9,7 @@ def get_scaled_shape(matrix, scale_rows, scale_cols):
 
 def resize_exact(matrix, scale_rows, scale_cols):
     target_shape = get_scaled_shape(matrix, scale_rows, scale_cols)
-    return resize(
-        matrix,
-        output_shape=target_shape,
-        order=0,  # Nearest-neighbor
-        mode='constant',  # Fill outside with zeros
-        cval=0,
-        anti_aliasing=False,
-        preserve_range=True
-    )
+    return resize(matrix, output_shape=target_shape, order=0, mode='constant', cval=0, anti_aliasing=False, preserve_range=True)
 
 def scale_sparse_matrix_wavelet(original_matrix: sp.csr_matrix, new_size: int, wavelet_type: str = 'db1', level: int = 2) -> sp.csr_matrix:
     # Ensure new_size is even for wavelet compatibility

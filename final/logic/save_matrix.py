@@ -5,11 +5,6 @@ import scipy.io as sio
 def save_matrix(matrix: sp.csr_matrix, file_name: str, folder_path: str) -> None:
     """
     Saves a SciPy CSR (Compressed Sparse Row) matrix to a file in Matrix Market (.mtx) format.
-
-    Args:
-        matrix: The SciPy CSR matrix to save.
-        file_name: The desired name of the output file (without the .mtx extension).
-        folder_path: The path to the folder where the file will be saved.
     """
     # Validate input types
     if not isinstance(matrix, sp.csr_matrix):

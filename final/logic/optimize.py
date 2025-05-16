@@ -251,13 +251,37 @@ def compute_property_loss_minmax(
         diff = np.abs(scaled_orig_val - scaled_new_val)
         loss += w * diff
     
-    return loss
+    return loss / 100
 
 def cost_function(original_matrix: sp.spmatrix, candidate_matrix: sp.spmatrix, weights: Dict[str, float], scaling_dict: Dict[str, Dict[str, Optional[float]]]) -> float:
     """Compute the cost between original and candidate matrices."""
     original_props = compute_matrix_properties(original_matrix)
     candidate_props = compute_matrix_properties(candidate_matrix)
     return compute_property_loss_minmax(original_props, candidate_props, weights, scaling_dict)
+
+def cost_function_raw(original_matrix, candidate_matrix, weights):
+    """Compute the cost between original and candidate matrices using raw (unscaled) property differences."""
+    original_props = compute_matrix_properties(original_matrix)
+    candidate_props = compute_matrix_properties(candidate_matrix)
+    loss = 0.0
+    for prop, w in weights.items():
+        orig_val = original_props.get(prop, 0)
+        cand_val = candidate_props.get(prop, 0)
+        if orig_val is not None and cand_val is not None:
+            loss += w * abs(orig_val - cand_val)
+    return loss / 100
+
+def cost_function_normalized(original_matrix, candidate_matrix, weights):
+    original_props = compute_matrix_properties(original_matrix)
+    candidate_props = compute_matrix_properties(candidate_matrix)
+    loss = 0.0
+    for prop, w in weights.items():
+        orig_val = original_props.get(prop, 0)
+        cand_val = candidate_props.get(prop, 0)
+        if orig_val is not None and cand_val is not None:
+            norm = abs(orig_val) if abs(orig_val) > 1e-8 else 1.0
+            loss += w * abs(orig_val - cand_val) / norm
+    return loss
 
 def perturb_values(matrix: sp.spmatrix, epsilon: float = 0.01) -> sp.spmatrix:
     """Perturb matrix values by a small random factor."""

@@ -1,3 +1,8 @@
 body {
     background-color: #f8f9fa;
 }
+
+#visualizationButtons {
+    margin-left: 10px; /* Add spacing between "Show Features" and visualization buttons */
+    vertical-align: middle; /* Align buttons vertically */
+}

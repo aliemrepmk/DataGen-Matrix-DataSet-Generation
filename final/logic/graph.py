@@ -93,12 +93,16 @@ def refine_once(adj_coarse: sp.csr_matrix,
     vals        = adj_coarse.data
     vmax        = vals.max() if vals.size else 1.0
 
+    # Ensure all weights are non-negative
+    vals = np.abs(vals)
+    vmax = max(vmax, 1e-10)  # Prevent division by zero
+
     row_out, col_out, val_out = [], [], []
 
     # iterate over each coarse edge once
     for r, c, w in zip(rows, cols, vals):
         # normalise weight → in (0,1]; use it as duplication probability
-        p      = min(1.0, (w / vmax) ** 0.2 )          # high w ⇒ p≈1, low w ⇒ p≪1 1 burda alpha değeri alpha >1 sharper 
+        p = min(1.0, (w / vmax) ** 0.2)  # high w ⇒ p≈1, low w ⇒ p≪1
         choices = [(i, j)
                    for i in range(splits)
                    for j in range(splits)]
@@ -138,13 +142,17 @@ def _sample_nodes_by_strength(A: sp.csr_matrix,
 
     # node strengths (degree for adjacency, row-sum of weights)
     strength = np.asarray(A.sum(axis=1)).ravel()
-    # avoid zeros → give tiny probability so np.random.choice won't complain
-    strength = strength + 1e-12
-    probs    = strength / strength.sum()
+    strength = np.clip(strength, 0, None) + 1e-12  # Ensure non-negative
+    if strength.sum() == 0:
+        # fallback to uniform
+        probs = np.ones_like(strength) / len(strength)
+    else:
+        probs = strength / strength.sum()
 
     keep = rng.choice(A.shape[0], size=new_size, replace=False, p=probs)
     keep.sort()
     return A[keep][:, keep].tocsr()
+
 # ------------------------------------------------------------------
 # ------------------  TOP-LEVEL SCALE FUNCTION ---------------------
 # ------------------------------------------------------------------

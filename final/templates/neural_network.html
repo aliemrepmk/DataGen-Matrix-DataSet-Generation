@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neural Network - DataGen</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-5">
+        <div class="text-center mb-4">
+            <h1 class="display-5">Neural Network</h1>
+            <p class="lead">Train neural networks on generated datasets</p>
+        </div>
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <div class="alert alert-success text-center" role="alert">
+                    {{ messages[0] }}
+                </div>
+            {% endif %}
+        {% endwith %}
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="row g-4">
+                    <div class="col-md-6">
+                        <div class="card h-100">
+                            <div class="card-body text-center">
+                                <h5 class="card-title">Use Pre-trained Model</h5>
+                                <p class="card-text">Apply a pre-trained neural network to your generated datasets.</p>
+                                <form method="POST" action="{{ url_for('use_pretrained_model') }}">
+                                    <button type="submit" class="btn btn-primary">Generate Matrix</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card h-100">
+                            <div class="card-body text-center">
+                                <h5 class="card-title">Train Your Own Network</h5>
+                                <p class="card-text">Train a custom neural network using your own parameters and datasets.</p>
+                                <a href="{{ url_for('train_network') }}" class="btn btn-primary">Train Your Own Network</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Matrix Visualization Section -->
+        <div class="row justify-content-center mt-5">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header text-center">
+                        <h4>Generated Matrix Visualization</h4>
+                    </div>
+                    <div class="card-body">
+                        {% if matrix_exists %}
+                        {% if matrix_info %}
+                        <div class="alert alert-success mb-3">
+                            <h5 class="alert-heading">Matrix Properties</h5>
+                            <p class="mb-0">Size: {{ matrix_info.shape[0] }} × {{ matrix_info.shape[1] }} | 
+                            Non-zeros: {{ matrix_info.nnz }} | 
+                            Density: {{ "%.2f"|format(matrix_info.density) }}%</p>
+                        </div>
+                        {% endif %}
+                        <div class="d-flex justify-content-center gap-3 mb-4">
+                            <button id="visualizeSpyBtn" class="btn btn-outline-primary">Show Spy Plot</button>
+                            <button id="visualizeHeatmapBtn" class="btn btn-outline-primary">Show Heatmap</button>
+                            <button id="visualizeGraphBtn" class="btn btn-outline-primary">Show Graph</button>
+                        </div>
+                        <div id="visualizationContainer" class="text-center">
+                            <p id="visualizationMessage" class="text-muted">Click any button above to visualize the generated matrix</p>
+                            <div id="loadingSpinner" class="spinner-border text-primary d-none" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                            <img id="visualizationImage" class="img-fluid mt-3 d-none" alt="Matrix Visualization">
+                        </div>
+                        {% else %}
+                        <div class="alert alert-info text-center" role="alert">
+                            <p>No matrix has been generated yet. Click the "Generate Matrix" button above to create a matrix using the pre-trained model.</p>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="text-center mt-4">
+            <a href="{{ url_for('welcome') }}" class="btn btn-secondary">Back to Home</a>
+        </div>
+    </div>
+    
+    <!-- JavaScript for visualization functionality -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const visualizeSpyBtn = document.getElementById('visualizeSpyBtn');
+            const visualizeHeatmapBtn = document.getElementById('visualizeHeatmapBtn');
+            const visualizeGraphBtn = document.getElementById('visualizeGraphBtn');
+            const visualizationImage = document.getElementById('visualizationImage');
+            const loadingSpinner = document.getElementById('loadingSpinner');
+            const visualizationMessage = document.getElementById('visualizationMessage');
+            
+            // Function to visualize matrix
+            function visualizeMatrix(type) {
+                visualizationImage.classList.add('d-none');
+                loadingSpinner.classList.remove('d-none');
+                visualizationMessage.textContent = 'Generating visualization...';
+                
+                fetch(`/visualize-neural-matrix?type=${type}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        loadingSpinner.classList.add('d-none');
+                        if (data.success) {
+                            visualizationImage.src = data.image_path;
+                            visualizationImage.classList.remove('d-none');
+                            visualizationMessage.textContent = '';
+                        } else {
+                            visualizationMessage.textContent = data.error || 'Error generating visualization';
+                        }
+                    })
+                    .catch(error => {
+                        loadingSpinner.classList.add('d-none');
+                        visualizationMessage.textContent = 'Error: ' + error;
+                    });
+            }
+            
+            // Event listeners for buttons
+            visualizeSpyBtn.addEventListener('click', () => visualizeMatrix('spy'));
+            visualizeHeatmapBtn.addEventListener('click', () => visualizeMatrix('heatmap'));
+            visualizeGraphBtn.addEventListener('click', () => visualizeMatrix('graph'));
+        });
+    </script>
+</body>
+</html> 

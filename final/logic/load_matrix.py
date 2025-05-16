@@ -16,7 +16,7 @@ def load_matrix(file_path):
         if matrix.dtype.kind == 'O':  # 'O' stands for object
             raise ValueError(f"Matrix has unsupported dtype=object (from file: {file_path})")
 
-        print(f"{file_path} loaded successfully with dtype: {matrix.dtype}")
+        print(f"{file_path} loaded successfully")
         return matrix
     except Exception as e:
         print(f"Error loading the matrix from {file_path}: {e}")
