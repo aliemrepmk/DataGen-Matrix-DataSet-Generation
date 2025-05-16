@@ -1,4 +1,4 @@
-# MatGen
+# MatGen - A Realistic Sparse Matrix Generator
 
 **MatGen** is a cutting-edge platform for advanced matrix dataset generation, manipulation, and analysis. Leveraging state-of-the-art algorithms and artificial intelligence, MatGen empowers users to create, scale, and explore complex matrix structures for scientific computing, machine learning, medical purposes, and engineering applications.
 
