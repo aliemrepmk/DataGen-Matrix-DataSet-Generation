@@ -37,6 +37,7 @@ from logic.lanczos import scale_sparse_matrix_lanczos
 from logic.nearest import scale_sparse_matrix_nearest
 from logic.wavelet import scale_sparse_matrix_wavelet
 from logic.kronecker import scale_sparse_matrix_kronecker
+from logic.random import expand_matrix
 
 # Problem solvers
 from problems.fluid import solve_fluid_symmetric_custom_for_web
@@ -66,11 +67,12 @@ SCALING_METHODS = {
     'lanczos': scale_sparse_matrix_lanczos,
     'nearest': scale_sparse_matrix_nearest,
     'wavelet': scale_sparse_matrix_wavelet,
-    'kronecker': scale_sparse_matrix_kronecker
+    'kronecker': scale_sparse_matrix_kronecker,
+    'random': expand_matrix 
 }
 
 # Methods that support upscaling
-UPSCALE_METHODS = ['bilinear', 'dct', 'fourier', 'graph', 'image', 'nearest', 'wavelet']
+UPSCALE_METHODS = ['bilinear', 'dct', 'fourier', 'graph', 'image', 'nearest', 'wavelet', "random"]
 
 # Allowed file extensions
 ALLOWED_EXTENSIONS = {'mtx'}
